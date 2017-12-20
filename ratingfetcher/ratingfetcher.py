@@ -97,8 +97,8 @@ class PlayerCriteria:
                         'not-so-pro-chess-league/members'
 
         response = get(nspcl_members, headers=REQUEST_HEADERS).json()
-        members = set(response['weekly'] + response['monthly'] +
-                      response['all_time'])
+        members = list(set(response['weekly'] + response['monthly'] +
+                           response['all_time']))
 
         if self.username.lower() in members:
             return True
