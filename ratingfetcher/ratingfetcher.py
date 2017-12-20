@@ -6,7 +6,7 @@ from dateutil.relativedelta import relativedelta
 from warnings import warn
 from operator import itemgetter
 
-from requests import Session
+from requests import get
 
 
 __author__ = "Walid Mujahid وليد مجاهد"
@@ -61,8 +61,7 @@ class GamePlay:
     @staticmethod
     def request_monthly_archive(url: str):
         """Gets monthly archive using url"""
-        with Session() as session:
-            return session.get(url, headers=REQUEST_HEADERS).json()['games']
+        return get(url, headers=REQUEST_HEADERS).json()['games']
 
     def get_monthly_archives(self, year: int, month: int):
         """Get a monthly archive for custom year and month."""
@@ -97,16 +96,14 @@ class PlayerCriteria:
         nspcl_members = 'https://api.chess.com/pub/club/' \
                         'not-so-pro-chess-league/members'
 
-        with Session() as session:
-            response = session.get(nspcl_members,
-                                   headers=REQUEST_HEADERS).json()
-            members = set(response['weekly'] + response['monthly'] +
-                          response['all_time'])
+        response = get(nspcl_members, headers=REQUEST_HEADERS).json()
+        members = set(response['weekly'] + response['monthly'] +
+                      response['all_time'])
 
-            if self.username.lower() in members:
-                return True
-            else:
-                return False
+        if self.username.lower() in members:
+            return True
+        else:
+            return False
 
     def has_played_minimum_standard_games(self, minimum_number=10):
         return self.player_game.has_played_x_number_of_games_of_type(
@@ -122,17 +119,15 @@ class PlayerCriteria:
 
         if self.is_member_of_nspcl():
             if self.has_played_minimum_standard_games():
-                with Session() as session:
-                    return session.get(url, headers=REQUEST_HEADERS
-                                       ).json()['chess_rapid']['last']['rating']
+                return get(url, headers=REQUEST_HEADERS
+                           ).json()['chess_rapid']['last']['rating']
             else:
                 warn(f"{self.username} has not played minimum amount"
                      " of standard games. Blitz rating may be used.")
 
             if self.has_played_minimum_blitz_games():
-                with Session() as session:
-                    return session.get(url, headers=REQUEST_HEADERS
-                                       ).json()['chess_blitz']['last']['rating']
+                return get(url, headers=REQUEST_HEADERS
+                           ).json()['chess_blitz']['last']['rating']
             else:
                 warn(f"{self.username} has not played minimum amount"
                      " of blitz games.")
