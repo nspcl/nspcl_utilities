@@ -1,3 +1,5 @@
+#! python
+# -*- coding: utf-8 -*-
 """"Retrieves player rating based on defined criteria."""
 from datetime import date
 from dateutil.relativedelta import relativedelta
