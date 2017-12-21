@@ -19,7 +19,7 @@ __email__ = "walid.mujahid.dev@gmail.com"
 __status__ = "Prototype"
 
 
-REQUEST_HEADERS = {'User-Agent': 'RatingsFetcher/0.6.1'
+REQUEST_HEADERS = {'User-Agent': 'RatingsFetcher/0.6.1 '
                                  '(Author: Walid Mujahid, '
                                  'Email: walid.mujahid.dev@gmail.com, '
                                  'Chess.com username: walidmujahid)'}
