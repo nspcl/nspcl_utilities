@@ -117,17 +117,22 @@ class PlayerCriteria:
         """TODO: Docstring"""
         url = f"https://api.chess.com/pub/player/{self.username}/stats"
 
+        # get rapid and blitz ratings and put them in a tuple that mentions
+        # the game type - e.g blitz or rapid
+        rapid_rating = (get(url, headers=REQUEST_HEADERS
+                            ).json()['chess_rapid']['last']['rating'], 'rapid')
+        blitz_rating = (get(url, headers=REQUEST_HEADERS
+                            ).json()['chess_rapid']['last']['rating'], 'blitz')
+
         if self.is_member_of_nspcl():
             if self.has_played_minimum_standard_games():
-                return get(url, headers=REQUEST_HEADERS
-                           ).json()['chess_rapid']['last']['rating']
+                return rapid_rating
             else:
                 warn(f"{self.username} has not played minimum amount"
                      " of standard games. Blitz rating may be used.")
 
             if self.has_played_minimum_blitz_games():
-                return get(url, headers=REQUEST_HEADERS
-                           ).json()['chess_blitz']['last']['rating']
+                return blitz_rating
             else:
                 warn(f"{self.username} has not played minimum amount"
                      " of blitz games.")
