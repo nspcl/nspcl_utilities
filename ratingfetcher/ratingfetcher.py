@@ -233,15 +233,5 @@ if __name__ == '__main__':
     list_of_players = ['spaceface23', 'walidmujahid', 'ijgeoffrey',
                        'VicMcCracken', 'eoguel', 'tombulous', 'regicidalmaniac']
 
-    # for player in list_of_players:
-    #     print(RatingFetcher(player).fetch_rating())
-
-    nspcl_members = 'https://api.chess.com/pub/club/' \
-                    'not-so-pro-chess-league/members'
-
-    response = get(nspcl_members, headers=REQUEST_HEADERS).json()
-    members = list(set(response['weekly'] + response['monthly'] +
-                       response['all_time']))
-
-    for member in members:
-        print(RatingFetcher(member).fetch_rating())
+    for player in list_of_players:
+        print(RatingFetcher(player).fetch_rating())
