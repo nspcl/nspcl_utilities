@@ -196,9 +196,11 @@ class RatingFetcher:
 
         # get rapid and blitz ratings and put them in a tuple that mentions
         # the game type - e.g blitz or rapid
-        self.rapid_rating = (self.player_stats['chess_rapid']['last']['rating'],
+        self.rapid_rating = (username,
+                             self.player_stats['chess_rapid']['last']['rating'],
                              'rapid')
-        self.blitz_rating = (self.player_stats['chess_rapid']['last']['rating'],
+        self.blitz_rating = (username,
+                             self.player_stats['chess_rapid']['last']['rating'],
                              'blitz')
 
     def fetch_rating(self):
@@ -215,8 +217,10 @@ class RatingFetcher:
                         return self.blitz_rating
                     else:
                         self.warnings.has_not_played_minimum_blitz_games()
+                        return tuple([self.username, 'does not meet criteria'])
                 else:
                     self.warnings.is_not_a_member_of_the_nspcl()
+                    return tuple([self.username, 'not a member of NSPCL'])
             else:
                 self.warnings.has_closed_account()
                 return tuple([self.username, 'account closed'])
@@ -229,5 +233,15 @@ if __name__ == '__main__':
     list_of_players = ['spaceface23', 'walidmujahid', 'ijgeoffrey',
                        'VicMcCracken', 'eoguel', 'tombulous', 'regicidalmaniac']
 
-    for player in list_of_players:
-        print(RatingFetcher(player).fetch_rating())
+    # for player in list_of_players:
+    #     print(RatingFetcher(player).fetch_rating())
+
+    nspcl_members = 'https://api.chess.com/pub/club/' \
+                    'not-so-pro-chess-league/members'
+
+    response = get(nspcl_members, headers=REQUEST_HEADERS).json()
+    members = list(set(response['weekly'] + response['monthly'] +
+                       response['all_time']))
+
+    for member in members:
+        print(RatingFetcher(member).fetch_rating())
