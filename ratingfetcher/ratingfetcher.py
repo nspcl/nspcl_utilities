@@ -31,12 +31,12 @@ class Warnings:
         """TODO: Docstring"""
         self.username = username
 
-    def has_not_played_minimum_amount_of_standard_games(self):
+    def has_not_played_minimum_standard_games(self):
         """TODO: Docstring"""
         warn(f"{self.username} has not played minimum amount"
              " of standard games. Blitz rating may be used.")
 
-    def has_not_played_minimum_amount_of_blitz_games(self):
+    def has_not_played_minimum_blitz_games(self):
         """TODO: Docstring"""
         warn(f"{self.username} has not played minimum amount"
              " of blitz games.")
@@ -209,12 +209,12 @@ class RatingFetcher:
                     if self.player_criteria.has_played_minimum_standard_games():
                         return self.rapid_rating
                     else:
-                        self.warnings.has_not_played_minimum_amount_of_standard_games()
+                        self.warnings.has_not_played_minimum_standard_games()
 
                     if self.player_criteria.has_played_minimum_blitz_games():
                         return self.blitz_rating
                     else:
-                        self.warnings.has_not_played_minimum_amount_of_blitz_games()
+                        self.warnings.has_not_played_minimum_blitz_games()
                 else:
                     self.warnings.is_not_a_member_of_the_nspcl()
             else:
