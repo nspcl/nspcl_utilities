@@ -203,23 +203,31 @@ class RatingFetcher:
 
     def fetch_rating(self):
         """TODO: Docstring"""
-        if self.player_criteria.is_member_of_nspcl():
-            if self.player_criteria.has_played_minimum_standard_games():
-                return self.rapid_rating
-            else:
-                self.warnings.has_not_played_minimum_amount_of_standard_games()
+        if self.player_criteria.has_not_violated_fair_play_rules():
+            if self.player_criteria.has_not_closed_account():
+                if self.player_criteria.is_member_of_nspcl():
+                    if self.player_criteria.has_played_minimum_standard_games():
+                        return self.rapid_rating
+                    else:
+                        self.warnings.has_not_played_minimum_amount_of_standard_games()
 
-            if self.player_criteria.has_played_minimum_blitz_games():
-                return self.blitz_rating
+                    if self.player_criteria.has_played_minimum_blitz_games():
+                        return self.blitz_rating
+                    else:
+                        self.warnings.has_not_played_minimum_amount_of_blitz_games()
+                else:
+                    self.warnings.is_not_a_member_of_the_nspcl()
             else:
-                self.warnings.has_not_played_minimum_amount_of_blitz_games()
+                self.warnings.has_closed_account()
+                return tuple([self.username, 'account closed'])
         else:
-            self.warnings.is_not_a_member_of_the_nspcl()
+            self.warnings.has_violated_fair_play_rules()
+            return tuple([self.username, 'violated fair play rules'])
 
 
 if __name__ == '__main__':
-    list_of_players = ['walidmujahid', 'ijgeoffrey', 'VicMcCracken', 'eoguel',
-                       'tombulous']
+    list_of_players = ['spaceface23', 'walidmujahid', 'ijgeoffrey', 'VicMcCracken', 'eoguel',
+                       'tombulous', 'regicidalmaniac']
 
     for player in list_of_players:
         print(RatingFetcher(player).fetch_rating())
