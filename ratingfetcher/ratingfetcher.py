@@ -13,13 +13,13 @@ __author__ = "Walid Mujahid وليد مجاهد"
 __copyright__ = "Copyright 2017, Walid Mujahid وليد مجاهد"
 __credits__ = ["Walid Mujahid وليد مجاهد"]
 __license__ = "MIT"
-__version__ = "0.6.1"
+__version__ = "0.7.0"
 __maintainer__ = "Walid Mujahid وليد مجاهد"
 __email__ = "walid.mujahid.dev@gmail.com"
-__status__ = "Prototype"
+__status__ = "Development"
 
 
-REQUEST_HEADERS = {'User-Agent': 'RatingsFetcher/0.6.1 '
+REQUEST_HEADERS = {'User-Agent': 'RatingsFetcher/0.7.0 '
                                  '(Author: Walid Mujahid, '
                                  'Email: walid.mujahid.dev@gmail.com, '
                                  'Chess.com username: walidmujahid)'}
@@ -69,6 +69,7 @@ class Player:
         """TODO: Docstring"""
         return get(f"https://api.chess.com/pub/player/{self.username}"
                    ).json()['status']
+
     def get_player_stats(self):
         """TODO: Docstring"""
         return get(f"https://api.chess.com/pub/player/{self.username}/stats",
