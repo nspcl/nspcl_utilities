@@ -25,6 +25,41 @@ REQUEST_HEADERS = {'User-Agent': 'RatingsFetcher/0.6.1 '
                                  'Chess.com username: walidmujahid)'}
 
 
+class Warnings:
+    def __init__(self, username):
+        self.username = username
+
+    def has_not_played_minimum_amount_of_standard_games(self):
+        warn(f"{self.username} has not played minimum amount"
+             " of standard games. Blitz rating may be used.")
+
+    def has_not_played_minimum_amount_of_blitz_games(self):
+        warn(f"{self.username} has not played minimum amount"
+             " of blitz games.")
+
+    def has_closed_account(self):
+        warn(f"{self.username} has closed their account.")
+
+    def has_violated_fair_play_rules(self):
+        warn(f"{self.username} has violated the fair play rules.")
+
+    def is_not_a_member_of_the_nspcl(self):
+        warn(f"{self.username} is not a member of the Not-So "
+             f"PRO Chess League.")
+
+    def is_a_titled_player(self):
+        warn(f"{self.username} is a titled player.")
+
+
+class Player:
+    def __init__(self, username):
+        self.username = username
+
+    def get_account_status(self):
+        return get(f"https://api.chess.com/pub/player/{self.username}"
+                   ).json()['status']
+
+
 class GamePlay:
     """TODO: Docstring."""
     def __init__(self, username: str, past_months: int=8):
@@ -89,7 +124,8 @@ class GamePlay:
 class PlayerCriteria:
     def __init__(self, username: str):
         self.username = username
-        self.player_game = GamePlay(self.username)
+        self.player = Player(username)
+        self.player_game = GamePlay(username)
 
     def is_member_of_nspcl(self):
         """Returns True if player is a member of the NSPCL."""
@@ -112,6 +148,17 @@ class PlayerCriteria:
     def has_played_minimum_blitz_games(self, minimum_number=10):
         return self.player_game.has_played_x_number_of_games_of_type(
             'blitz', minimum_number)
+
+    # make sure user did not close their account
+    def has_not_closed_account(self):
+        status = self.player.get_account_status()
+
+        return True if status != 'closed' else False
+
+    def has_not_violated_fair_play_rules(self):
+        status = self.player.get_account_status()
+
+        return True if status != "closed:fair_play_violations" else False
 
     def fetch_rating(self):
         """TODO: Docstring"""
