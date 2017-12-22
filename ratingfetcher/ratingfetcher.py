@@ -69,6 +69,10 @@ class Player:
         """TODO: Docstring"""
         return get(f"https://api.chess.com/pub/player/{self.username}"
                    ).json()['status']
+    def get_player_stats(self):
+        """TODO: Docstring"""
+        return get(f"https://api.chess.com/pub/player/{self.username}/stats",
+                   headers=REQUEST_HEADERS).json()
 
 
 class GamePlay:
@@ -180,32 +184,37 @@ class PlayerCriteria:
         """TODO: Docstring"""
         return True if self.status != "closed:fair_play_violations" else False
 
-    def fetch_rating(self):
+
+class RatingFetcher:
+    """TODO: Docstring"""
+    def __init__(self, username):
         """TODO: Docstring"""
-        url = f"https://api.chess.com/pub/player/{self.username}/stats"
+        self.username = username
+        self.warnings = Warnings(username)
+        self.player_criteria = PlayerCriteria(username)
+        self.player_stats = Player(username).get_player_stats()
 
         # get rapid and blitz ratings and put them in a tuple that mentions
         # the game type - e.g blitz or rapid
-        rapid_rating = (get(url, headers=REQUEST_HEADERS
-                            ).json()['chess_rapid']['last']['rating'], 'rapid')
-        blitz_rating = (get(url, headers=REQUEST_HEADERS
-                            ).json()['chess_rapid']['last']['rating'], 'blitz')
+        self.rapid_rating = (self.player_stats['chess_rapid']['last']['rating'],
+                             'rapid')
+        self.blitz_rating = (self.player_stats['chess_rapid']['last']['rating'],
+                             'blitz')
 
-        if self.is_member_of_nspcl():
-            if self.has_played_minimum_standard_games():
-                return rapid_rating
+    def fetch_rating(self):
+        """TODO: Docstring"""
+        if self.player_criteria.is_member_of_nspcl():
+            if self.player_criteria.has_played_minimum_standard_games():
+                return self.rapid_rating
             else:
-                warn(f"{self.username} has not played minimum amount"
-                     " of standard games. Blitz rating may be used.")
+                self.warnings.has_not_played_minimum_amount_of_standard_games()
 
-            if self.has_played_minimum_blitz_games():
-                return blitz_rating
+            if self.player_criteria.has_played_minimum_blitz_games():
+                return self.blitz_rating
             else:
-                warn(f"{self.username} has not played minimum amount"
-                     " of blitz games.")
+                self.warnings.has_not_played_minimum_amount_of_blitz_games()
         else:
-            warn(f"{self.username} is not a member of the Not-So "
-                 f"PRO Chess League.")
+            self.warnings.is_not_a_member_of_the_nspcl()
 
 
 if __name__ == '__main__':
@@ -213,4 +222,4 @@ if __name__ == '__main__':
                        'tombulous']
 
     for player in list_of_players:
-        print(PlayerCriteria(player).fetch_rating())
+        print(RatingFetcher(player).fetch_rating())
