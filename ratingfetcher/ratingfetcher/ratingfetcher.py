@@ -231,8 +231,9 @@ class RatingFetcher:
 
 
 if __name__ == '__main__':
-    list_of_players = ['spaceface23', 'walidmujahid', 'ijgeoffrey',
-                       'VicMcCracken', 'eoguel', 'tombulous', 'regicidalmaniac']
+    list_of_players = ['Didier_Sachs', 'spaceface23', 'walidmujahid',
+                       'ijgeoffrey', 'VicMcCracken', 'eoguel',
+                       'tombulous', 'regicidalmaniac']
 
     for player in list_of_players:
         print(RatingFetcher(player).fetch_rating())
