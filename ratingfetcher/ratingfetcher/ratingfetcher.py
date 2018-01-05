@@ -25,40 +25,6 @@ REQUEST_HEADERS = {'User-Agent': 'RatingsFetcher/0.7.0 '
                                  'Chess.com username: walidmujahid)'}
 
 
-class Warnings:
-    """TODO: Docstring"""
-    def __init__(self, username):
-        """TODO: Docstring"""
-        self.username = username
-
-    def has_not_played_minimum_standard_games(self):
-        """TODO: Docstring"""
-        warn(f"{self.username} has not played minimum amount"
-             " of standard games. Blitz rating may be used.")
-
-    def has_not_played_minimum_blitz_games(self):
-        """TODO: Docstring"""
-        warn(f"{self.username} has not played minimum amount"
-             " of blitz games.")
-
-    def has_closed_account(self):
-        """TODO: Docstring"""
-        warn(f"{self.username} has closed their account.")
-
-    def has_violated_fair_play_rules(self):
-        """TODO: Docstring"""
-        warn(f"{self.username} has violated the fair play rules.")
-
-    def is_not_a_member_of_the_nspcl(self):
-        """TODO: Docstring"""
-        warn(f"{self.username} is not a member of the Not-So "
-             f"PRO Chess League.")
-
-    def is_a_titled_player(self):
-        """TODO: Docstring"""
-        warn(f"{self.username} is a titled player.")
-
-
 class Player:
     """TODO: Docstring"""
     def __init__(self, username):
@@ -191,7 +157,6 @@ class RatingFetcher:
     def __init__(self, username):
         """TODO: Docstring"""
         self.username = username
-        self.warnings = Warnings(username)
         self.player_criteria = PlayerCriteria(username)
         self.player_stats = Player(username).get_player_stats()
 
